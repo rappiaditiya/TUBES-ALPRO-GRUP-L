@@ -1,0 +1,14 @@
+
+Struktur Data
+
+Bahan — nama & jumlah bahan
+Resep — ID, judul, kategori, bahan utama, slice bahan, slice langkah, durasi masak, sering dicari
+
+Fitur (sesuai spesifikasi)
+MenuFungsi1–4CRUD resep (tambah, lihat, ubah, hapus)5Sequential Search berdasarkan bahan utama (partial match)6Binary Search berdasarkan bahan utama (exact, data di-sort dulu)7Selection Sort (durasi) + Insertion Sort (abjad judul)8Statistik: resep per kategori & top 5 paling sering dicari
+Catatan implementasi:
+
+Sort dan search tidak mengubah urutan data asli — menggunakan salinan (copy)
+Binary search otomatis mengurutkan salinan data sebelum mencari
+Setiap kali resep ditemukan lewat search, SeringDicari bertambah (untuk statistik)
+5 data contoh sudah dimuat otomatis saat program dijalankan
