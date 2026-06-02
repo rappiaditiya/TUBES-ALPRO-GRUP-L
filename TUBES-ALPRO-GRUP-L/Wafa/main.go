@@ -8,8 +8,6 @@ import (
 	"strings"
 )
 
-// ===================== STRUCT =====================
-
 type Bahan struct {
 	Nama   string
 	Jumlah string
@@ -22,17 +20,13 @@ type Resep struct {
 	BahanUtama   string
 	Bahan        []Bahan
 	Langkah      []string
-	DurasiMasak  int // dalam menit
+	DurasiMasak  int
 	SeringDicari int
 }
-
-// ===================== DATA GLOBAL =====================
 
 var daftarResep []Resep
 var nextID int = 1
 var scanner = bufio.NewScanner(os.Stdin)
-
-// ===================== HELPER INPUT =====================
 
 func input(prompt string) string {
 	fmt.Print(prompt)
@@ -60,8 +54,6 @@ func cariIndexByID(id int) int {
 	return -1
 }
 
-// ===================== CRUD =====================
-
 func tambahResep() {
 	fmt.Println("\n──────────── TAMBAH RESEP ────────────")
 	var r Resep
@@ -73,7 +65,6 @@ func tambahResep() {
 	r.BahanUtama = input("Bahan utama       : ")
 	r.DurasiMasak = inputInt("Durasi masak (mnt): ")
 
-	// Input bahan
 	jmlBahan := inputInt("Jumlah bahan      : ")
 	for i := 1; i <= jmlBahan; i++ {
 		var b Bahan
@@ -82,7 +73,6 @@ func tambahResep() {
 		r.Bahan = append(r.Bahan, b)
 	}
 
-	// Input langkah
 	jmlLangkah := inputInt("Jumlah langkah    : ")
 	for i := 1; i <= jmlLangkah; i++ {
 		l := input(fmt.Sprintf("  Langkah ke-%d: ", i))
@@ -175,8 +165,6 @@ func hapusResep() {
 	fmt.Printf("  [✓] Resep \"%s\" berhasil dihapus.\n", judul)
 }
 
-// ===================== SEARCH =====================
-
 func sequentialSearch() {
 	fmt.Println("\n──────────── SEQUENTIAL SEARCH ────────────")
 	if len(daftarResep) == 0 {
@@ -197,7 +185,6 @@ func sequentialSearch() {
 	}
 }
 
-// Binary search mengharuskan data terurut berdasarkan BahanUtama
 func binarySearch() {
 	fmt.Println("\n──────────── BINARY SEARCH ────────────")
 	if len(daftarResep) == 0 {
@@ -205,10 +192,8 @@ func binarySearch() {
 		return
 	}
 
-	// Buat salinan terurut berdasarkan BahanUtama (tidak mengubah data asli)
 	sorted := make([]Resep, len(daftarResep))
 	copy(sorted, daftarResep)
-	// Urutkan dengan insertion sort (bahan utama abjad)
 	for i := 1; i < len(sorted); i++ {
 		key := sorted[i]
 		j := i - 1
@@ -227,20 +212,16 @@ func binarySearch() {
 		mid := (lo + hi) / 2
 		cmp := strings.ToLower(sorted[mid].BahanUtama)
 		if cmp == kata {
-			// Cari semua yang cocok di sekitar mid
-			// kiri
 			l := mid
 			for l > 0 && strings.ToLower(sorted[l-1].BahanUtama) == kata {
 				l--
 			}
-			// kanan
 			r := mid
 			for r < len(sorted)-1 && strings.ToLower(sorted[r+1].BahanUtama) == kata {
 				r++
 			}
 			for k := l; k <= r; k++ {
 				tampilkanResep(sorted[k])
-				// update SeringDicari di data asli
 				for idx := range daftarResep {
 					if daftarResep[idx].ID == sorted[k].ID {
 						daftarResep[idx].SeringDicari++
@@ -259,8 +240,6 @@ func binarySearch() {
 		fmt.Println("  [!] Resep tidak ditemukan.")
 	}
 }
-
-// ===================== SORT =====================
 
 func selectionSortDurasi() {
 	if len(daftarResep) == 0 {
@@ -326,8 +305,6 @@ func menuUrutan() {
 	}
 }
 
-// ===================== STATISTIK =====================
-
 func statistik() {
 	fmt.Println("\n──────────── STATISTIK ────────────")
 	if len(daftarResep) == 0 {
@@ -335,7 +312,6 @@ func statistik() {
 		return
 	}
 
-	// Hitung jumlah resep per kategori
 	katMap := make(map[string]int)
 	for _, r := range daftarResep {
 		katMap[r.Kategori]++
@@ -346,11 +322,9 @@ func statistik() {
 		fmt.Printf("    %-20s : %d resep\n", kat, jml)
 	}
 
-	// Daftar menu paling sering dicari (top 5)
 	sorted := make([]Resep, len(daftarResep))
 	copy(sorted, daftarResep)
 
-	// Selection sort berdasarkan SeringDicari (descending)
 	n := len(sorted)
 	for i := 0; i < n-1; i++ {
 		maxIdx := i
@@ -372,8 +346,6 @@ func statistik() {
 			i+1, sorted[i].Judul, sorted[i].SeringDicari)
 	}
 }
-
-// ===================== DATA CONTOH =====================
 
 func muatDataContoh() {
 	contoh := []Resep{
@@ -452,8 +424,6 @@ func muatDataContoh() {
 	nextID += 5
 }
 
-// ===================== MENU UTAMA =====================
-
 func menuUtama() {
 	for {
 		fmt.Println("\n╔══════════════════════════════════════╗")
@@ -508,8 +478,6 @@ func menuUtama() {
 		}
 	}
 }
-
-// ===================== MAIN =====================
 
 func main() {
 	fmt.Println("╔══════════════════════════════════════╗")
